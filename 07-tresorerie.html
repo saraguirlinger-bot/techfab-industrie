@@ -332,13 +332,13 @@ a{text-decoration:none}
 </div>
 <div class="prog-strip">
   <span class="prog-txt" id="prog-txt">Section 7 / 10</span>
-  <div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:60%"></div></div>
   <span class="prog-score" id="prog-score" data-section="6"></span>
 </div>
 
-<div id="sp-6" class="spanel on">
+<div class="section-root">
 <!-- ═══ SECTION 6 — TRÉSORERIE ═══ -->
-  <div class="spanel" id="sp-6">
+  <div class="spanel on" id="sp-6">
     <div class="theme-blk"><div class="theme-num">Section 07</div><div class="theme-title">Budget de trésorerie</div><div class="theme-intro">Observez les flux d'encaissements et décaissements mois par mois.</div></div>
     <div class="swrap">
       <div class="flow" style="margin:14px">
@@ -601,9 +601,12 @@ function updateProgress(){
   const done=S.completedTabs.length;
   const total=Object.values(S.sections).reduce((a,s)=>a+(s.score||0),0);
   const max=SECTION_META.length*4; // ~4 qs per section avg (synthèse a 5)
-  document.getElementById('prog-fill').style.width=(done/10*100)+'%';
-  document.getElementById('prog-txt').textContent=done+' / 10 validées';
-  document.getElementById('prog-score').textContent=total+' pts';
+  const fill=document.getElementById('prog-fill');
+  const txt=document.getElementById('prog-txt');
+  const score=document.getElementById('prog-score');
+  if(fill) fill.style.width=(done/10*100)+'%';
+  if(txt) txt.textContent=done+' / 10 validées';
+  if(score) score.textContent=total+' pts';
 }
 
 function showResults(){
@@ -677,12 +680,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 
+
 const SECTION_IDX = 6;
 
 function updateScore(){
-  const total=Object.values(S.sections).reduce((a,s)=>a+(s.score||0),0);
-  const done=Object.keys(S.sections).length;
-  document.getElementById('prog-score').textContent=total+' pts';
+  updateProgress();
 }
 
 function validateAndNext(idx, nextPage){
@@ -693,7 +695,7 @@ function validateAndNext(idx, nextPage){
   S.totalScore=Object.values(S.sections).reduce((a,s)=>a+(s.score||0),0);
   if(!S.completedTabs.includes(idx))S.completedTabs.push(idx);
   save();
-  // Chip score
+
   const panel=document.getElementById('sp-6');
   if(panel){
     panel.querySelector('.sscore')?.remove();
@@ -705,27 +707,14 @@ function validateAndNext(idx, nextPage){
       btn.insertAdjacentElement('afterend',chip);
     }
   }
-  updateScore();
-  if(idx===9){showResults();return;}
+  updateProgress();
   if(nextPage){
     setTimeout(()=>window.location.href=nextPage, 800);
   }
 }
 
-// Drag-and-drop
-function initDrag(){
-  const c=document.getElementById('rank_q0_4');
-  if(!c)return;
-  let drag=null;
-  c.addEventListener('dragstart',e=>{if(!e.target.classList.contains('rank-item'))return;drag=e.target;e.target.classList.add('dragging');});
-  c.addEventListener('dragend',e=>{e.target.classList.remove('dragging');c.querySelectorAll('.rank-item').forEach(i=>i.classList.remove('drag-over'));drag=null;});
-  c.addEventListener('dragover',e=>{e.preventDefault();const t=e.target.closest('.rank-item');if(!t||t===drag)return;c.querySelectorAll('.rank-item').forEach(i=>i.classList.remove('drag-over'));t.classList.add('drag-over');const rect=t.getBoundingClientRect();e.clientY<rect.top+rect.height/2?c.insertBefore(drag,t):c.insertBefore(drag,t.nextSibling);});
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  initDrag();
-  updateScore();
-  // Restaurer si déjà validée
+// Restauration du score de cette section si déjà validée
+window.addEventListener('DOMContentLoaded',()=>{
   const meta=SECTION_META[SECTION_IDX];
   if(S.sections[meta.key]){
     const r=S.sections[meta.key];
