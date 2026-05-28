@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TECHFAB — Résultat final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#1a1a1a;
+  --green:#7aab80;
+  --gdk:#4d7a52;
+  --glt:#e8f2e9;
+  --gbg:#ededea;
+  --gcd:#e4e4e0;
+  --gln:#d4d4d0;
+  --gmid:#9a9a94;
+  --gtxt:#56564f;
+  --white:#fff;
+  --red:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:var(--gbg);color:var(--black);min-height:100vh}
+.topbar{background:var(--white);border-bottom:3px solid var(--green);padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+.inst-left{display:flex;align-items:center;gap:12px}
+.inst-avatar{width:42px;height:42px;background:var(--gcd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.inst-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:.1em;text-transform:uppercase}
+.inst-sub{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gmid)}
+.hero{background:var(--black);padding:28px 18px;text-align:center}
+.hero-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:2rem;letter-spacing:.04em;text-transform:uppercase;color:var(--white)}
+.hero-sub{font-size:.88rem;color:rgba(255,255,255,.55);margin-top:8px}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 80px}
+.card{background:var(--white);border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden;margin-bottom:14px}
+.card-h{background:var(--black);color:var(--white);padding:12px 16px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.75rem}
+.card-b{padding:18px}
+.score-box{text-align:center;padding:24px 12px}
+.note{font-family:'Barlow Condensed',sans-serif;font-size:4rem;font-weight:800;color:var(--black);line-height:1}
+.pct{font-size:.95rem;color:var(--gmid);margin-top:4px}
+.profile{text-align:center;margin-top:12px}
+.profile-icon{font-size:2.2rem;margin-bottom:8px}
+.profile-title{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:800;text-transform:uppercase;color:var(--black)}
+.profile-desc{color:var(--gtxt);line-height:1.5;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{background:var(--cream,#fafaf7);border:1px solid var(--gln);border-radius:6px;padding:14px}
+.box-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.box.acquis .box-title{color:var(--gdk)}
+.box.axes .box-title{color:var(--red)}
+ul{margin-left:18px;color:var(--gtxt);line-height:1.5}
+li{margin:5px 0}
+.break-item{display:grid;grid-template-columns:130px 1fr 54px;gap:9px;align-items:center;margin:9px 0}
+.break-name{font-size:.8rem;color:var(--gtxt)}
+.bar-bg{height:7px;background:var(--gcd);border-radius:99px;overflow:hidden}
+.bar{height:100%;background:var(--green);border-radius:99px;width:0}
+.break-score{text-align:right;font-weight:700;font-size:.8rem}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--green);color:#fff;text-decoration:none;border:none;border-radius:4px;padding:11px 16px;font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.06em;cursor:pointer}
+.btn.secondary{background:var(--black)}
+@media(max-width:560px){
+  .grid{grid-template-columns:1fr}
+  .break-item{grid-template-columns:95px 1fr 45px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inst-left">
+    <div class="inst-avatar">📊</div>
+    <div>
+      <div class="inst-name">TECHFAB Industrie</div>
+      <div class="inst-sub">Prévisions budgétaires</div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-label">Étape 11</div>
+  <h1 class="hero-title">Résultat final</h1>
+  <p class="hero-sub">Note, profil apprenant, acquis et axes d’amélioration</p>
+</section>
+
+<main class="wrap">
+  <section class="card">
+    <div class="card-h">Score global</div>
+    <div class="card-b score-box">
+      <div id="note" class="note">-/20</div>
+      <div id="pct" class="pct">-%</div>
+      <div class="profile">
+        <div id="profileIcon" class="profile-icon">📊</div>
+        <div id="profileTitle" class="profile-title">Profil apprenant</div>
+        <p id="profileDesc" class="profile-desc">Chargement des résultats...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">Acquis et axes d’amélioration</div>
+    <div class="card-b">
+      <div class="grid">
+        <div class="box acquis">
+          <div class="box-title">Acquis</div>
+          <ul id="acquis"></ul>
+        </div>
+        <div class="box axes">
+          <div class="box-title">Axes d’amélioration</div>
+          <ul id="axes"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">Détail par section</div>
+    <div class="card-b" id="breakdown"></div>
+  </section>
+
+  <div class="btns">
+    <a class="btn secondary" href="10-synthese.html">← Retour à la synthèse</a>
+    <a class="btn" href="index.html">Retour accueil</a>
+  </div>
+</main>
+
+<script>
+(function(){
+  const KEY='techfab_v2';
+
+  const SECTION_META=[
+    {key:'presentation',label:'Présentation'},
+    {key:'swot',label:'SWOT / PESTEL'},
+    {key:'hypotheses',label:'Hypothèses'},
+    {key:'ventes',label:'Ventes'},
+    {key:'production',label:'Production'},
+    {key:'appro',label:'Approvisionnements'},
+    {key:'tresorerie',label:'Trésorerie'},
+    {key:'ecarts',label:'Écarts'},
+    {key:'forecast',label:'Forecast'},
+    {key:'synthese',label:'Synthèse'}
+  ];
+
+  let data=null;
+  try{
+    data=JSON.parse(localStorage.getItem(KEY));
+  }catch(e){}
+
+  if(!data){
+    data={totalScore:0,sections:{}};
+  }
+
+  const sections=data.sections||{};
+  const total=data.totalScore||0;
+  let max=Object.values(sections).reduce((a,s)=>a+(s.max||0),0);
+
+  if(!max){
+    max=38;
+  }
+
+  const pct=Math.round((total/max)*100);
+  const note=Math.round((total/max)*20*10)/10;
+
+  document.getElementById('note').textContent=note+'/20';
+  document.getElementById('pct').textContent=pct+'% — '+total+'/'+max+' points';
+
+  let icon='🏗️';
+  let title='Analyste en construction';
+  let desc='Vous avez posé les premières bases. Il faut consolider la méthode, les calculs et le lien avec les décisions de pilotage.';
+
+  if(pct>=75){
+    icon='🚀';
+    title='Business Partner en devenir';
+    desc='Très bonne maîtrise du cycle budget, réel, écarts et forecast. Vous savez transformer les chiffres en aide à la décision.';
+  }else if(pct>=50){
+    icon='📊';
+    title='Contrôleur de gestion opérationnel';
+    desc='Bonne maîtrise globale. Vous savez exploiter les budgets et repérer les points d’alerte, avec encore quelques liens à renforcer.';
+  }
+
+  document.getElementById('profileIcon').textContent=icon;
+  document.getElementById('profileTitle').textContent=title;
+  document.getElementById('profileDesc').textContent=desc;
+
+  const acquis=[];
+  const axes=[];
+
+  SECTION_META.forEach(s=>{
+    const sec=sections[s.key]||{score:0,max:1};
+    const sp=Math.round((sec.score/sec.max)*100);
+    if(sp>=75) acquis.push(s.label);
+    if(sp<60) axes.push(s.label);
+  });
+
+  if(acquis.length===0){
+    acquis.push('Lecture globale du cas TECHFAB');
+    acquis.push('Repérage des informations utiles au pilotage');
+  }
+
+  if(axes.length===0){
+    axes.push('Renforcer la justification chiffrée des décisions');
+    axes.push('Structurer davantage la synthèse finale');
+  }
+
+  document.getElementById('acquis').innerHTML=acquis.map(x=>'<li>'+x+'</li>').join('');
+  document.getElementById('axes').innerHTML=axes.map(x=>'<li>'+x+'</li>').join('');
+
+  document.getElementById('breakdown').innerHTML=SECTION_META.map(s=>{
+    const sec=sections[s.key]||{score:0,max:1};
+    const sp=Math.round((sec.score/sec.max)*100);
+    return '<div class="break-item">'
+      +'<div class="break-name">'+s.label+'</div>'
+      +'<div class="bar-bg"><div class="bar" style="width:'+sp+'%"></div></div>'
+      +'<div class="break-score">'+sec.score+'/'+sec.max+'</div>'
+      +'</div>';
+  }).join('');
+})();
+</script>
+
+</body>
+</html>
