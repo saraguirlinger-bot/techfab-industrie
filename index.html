@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TECHFAB Industrie — Contrôle de gestion PME</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#1a1a1a;--black2:#222;
+  --green:#7aab80;--gdk:#4d7a52;--glt:#e8f2e9;
+  --gbg:#ededea;--gcd:#e4e4e0;--gln:#d4d4d0;
+  --gmid:#9a9a94;--gtxt:#56564f;--white:#fff;
+  --red:#c0392b;--orange:#e07a2e;--blue:#4a78c4;
+  --cream:#fafaf7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Barlow','Segoe UI',sans-serif;background:var(--gbg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:3px solid var(--green);padding:10px 16px;position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inst-left{display:flex;align-items:center;gap:10px}
+.inst-avatar{width:40px;height:40px;background:var(--gcd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.inst-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;color:var(--black);line-height:1.1}
+.inst-sub{font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gmid)}
+.dl-btn{display:inline-flex;align-items:center;gap:5px;background:var(--green);color:var(--white);border:none;border-radius:3px;padding:6px 11px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s}
+.dl-btn:hover{background:var(--gdk)}
+
+/* ══ HERO ══ */
+.hero{background:var(--black);padding:32px 18px 28px}
+.hero-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:2rem;letter-spacing:.04em;text-transform:uppercase;color:var(--white);line-height:1.1;margin-bottom:8px}
+.hero-intro{font-size:.84rem;color:rgba(255,255,255,.5);line-height:1.65;max-width:560px;margin-bottom:18px}
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.htag{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
+.htag.g{background:rgba(122,171,128,.2);color:var(--green)}
+.htag.o{background:rgba(224,122,46,.2);color:var(--orange)}
+.htag.b{background:rgba(74,120,196,.2);color:#7aa4e8}
+
+/* ══ GLOBAL PROGRESS ══ */
+.glob-prog{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:14px 16px}
+.glob-prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.glob-prog-lbl{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.glob-prog-val{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;color:var(--green)}
+.glob-bar{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:100px;overflow:hidden;margin-bottom:8px}
+.glob-fill{height:100%;background:var(--green);border-radius:100px;transition:width .6s ease;width:0%}
+.glob-stats{display:flex;gap:14px}
+.glob-stat{font-size:.64rem;color:rgba(255,255,255,.35)}
+.glob-stat strong{color:rgba(255,255,255,.65)}
+
+/* ══ MAIN ══ */
+.main-wrap{max-width:700px;margin:0 auto;padding:18px 14px 80px}
+
+/* ══ SECTION HEADER ══ */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:18px}
+.section-hdr-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gmid)}
+.btn-reset{background:transparent;border:1px solid var(--gln);border-radius:3px;padding:5px 10px;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gmid);cursor:pointer;transition:all .15s}
+.btn-reset:hover{border-color:var(--red);color:var(--red)}
+
+/* ══ MISSION CARDS ══ */
+.missions-grid{display:flex;flex-direction:column;gap:8px}
+.mission-card{background:var(--white);border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:box-shadow .15s;text-decoration:none;display:block;border-left:3px solid var(--gln)}
+.mission-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.mission-card.done{border-left-color:var(--green)}
+.mission-card.current{border-left-color:var(--orange)}
+.mission-card.locked{opacity:.5;pointer-events:none}
+.mc-inner{display:flex;align-items:center;gap:12px;padding:13px 14px}
+.mc-num{width:34px;height:34px;border-radius:50%;background:var(--gbg);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;color:var(--gmid);flex-shrink:0;transition:all .2s}
+.mission-card.done .mc-num{background:var(--glt);color:var(--gdk)}
+.mission-card.current .mc-num{background:#fff4e8;color:var(--orange)}
+.mc-body{flex:1;min-width:0}
+.mc-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gmid);margin-bottom:2px}
+.mc-title{font-weight:600;font-size:.88rem;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-desc{font-size:.74rem;color:var(--gtxt);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.mc-score{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;color:var(--gdk)}
+.mc-badge{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.mc-badge.done{background:var(--glt);color:var(--gdk)}
+.mc-badge.current{background:#fff4e8;color:var(--orange)}
+.mc-badge.todo{background:var(--gbg);color:var(--gmid)}
+.mc-arrow{font-size:.8rem;color:var(--gln)}
+.mission-card:hover .mc-arrow{color:var(--green)}
+
+/* ══ CTA START ══ */
+.cta-block{background:var(--black);border-radius:4px;padding:16px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.cta-text{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.5}
+.cta-text strong{color:var(--white)}
+.btn-start{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:var(--white);border:none;border-radius:3px;padding:11px 20px;font-family:'Barlow',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s;white-space:nowrap}
+.btn-start:hover{background:var(--gdk)}
+.btn-results{display:inline-flex;align-items:center;gap:6px;background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15);border-radius:3px;padding:10px 16px;font-family:'Barlow',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .15s}
+.btn-results:hover{border-color:var(--green);color:var(--green)}
+
+/* ══ INFO BOX ══ */
+.info-box{display:flex;gap:10px;background:var(--glt);border-left:3px solid var(--green);border-radius:3px;padding:11px 13px;margin-bottom:12px;font-size:.82rem;color:var(--gtxt);line-height:1.6}
+.info-box.warn{background:#fff8f0;border-left-color:var(--orange)}
+.info-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.info-box strong{color:var(--black)}
+
+/* ══ COMPETENCES ══ */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.comp-card{background:var(--white);border-radius:4px;padding:12px 13px;border-left:3px solid var(--gln)}
+.comp-card.g{border-left-color:var(--green)}
+.comp-card.o{border-left-color:var(--orange)}
+.comp-card.b{border-left-color:var(--blue)}
+.comp-name{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gmid);margin-bottom:4px}
+.comp-val{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;color:var(--black);line-height:1}
+.comp-sub{font-size:.7rem;color:var(--gtxt);margin-top:2px}
+
+@media(max-width:520px){
+  .hero-title{font-size:1.55rem}
+  .cta-block{flex-direction:column;align-items:flex-start}
+  .comp-grid{grid-template-columns:1fr 1fr}
+  .mc-desc{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="inst-left">
+    <div class="inst-avatar">⚙️</div>
+    <div>
+      <div class="inst-name">TECHFAB Industrie</div>
+      <div class="inst-sub">Horizon PME · Contrôle de gestion</div>
+    </div>
+  </div>
+  <a class="dl-btn" href="assets/TECHFAB_ELEVE_V4.xlsx" download>⬇ Fichier Excel</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-eyebrow">Parcours pédagogique · BTS CG / Licence</div>
+  <div class="hero-title">TECHFAB Industrie<br>Pilotage PME par les coûts</div>
+  <div class="hero-intro">
+    Vous êtes contrôleur de gestion junior mandaté par le cabinet Horizon PME pour accompagner TECHFAB Industrie. En 10 missions progressives, vous analyserez la santé financière de l'entreprise, construirez ses budgets prévisionnels, et formulerez vos recommandations stratégiques.
+  </div>
+  <div class="hero-tags">
+    <span class="htag g">📊 Analyse financière</span>
+    <span class="htag o">📈 Budgets prévisionnels</span>
+    <span class="htag b">🎯 Pilotage par les coûts</span>
+  </div>
+  <div class="glob-prog">
+    <div class="glob-prog-top">
+      <div class="glob-prog-lbl">Progression globale</div>
+      <div class="glob-prog-val" id="glob-val">0 / 10 missions</div>
+    </div>
+    <div class="glob-bar"><div class="glob-fill" id="glob-fill"></div></div>
+    <div class="glob-stats">
+      <div class="glob-stat"><strong id="glob-pts">0</strong> pts cumulés</div>
+      <div class="glob-stat"><strong id="glob-pct">0 %</strong> du parcours</div>
+      <div class="glob-stat"><strong id="glob-note">—</strong> / 20</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap">
+
+  <div class="info-box">
+    <span class="info-icon">📁</span>
+    <div>
+      <strong>Mode d'emploi :</strong> Téléchargez le fichier Excel et travaillez dans les onglets correspondant à chaque mission. Les questions interactives valident votre compréhension des calculs effectués dans Excel.
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <div class="section-hdr-title">Les 10 missions</div>
+    <button class="btn-reset" onclick="resetAll()">↺ Réinitialiser</button>
+  </div>
+
+  <div class="missions-grid" id="missions-grid">
+    <!-- généré par JS -->
+  </div>
+
+  <div class="cta-block" id="cta-block">
+    <div class="cta-text">
+      <strong>Prêt à démarrer ?</strong><br>
+      Commencez par le diagnostic financier de TECHFAB.
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a class="btn-start" id="btn-start" href="01-presentation.html">▶ Démarrer la mission 01</a>
+      <a class="btn-results" href="resultats.html">📊 Tableau formateur</a>
+    </div>
+  </div>
+
+  <!-- ══ COMPÉTENCES ══ -->
+  <div style="margin-top:22px">
+    <div class="section-hdr-title" style="margin-bottom:10px">Compétences évaluées</div>
+    <div class="comp-grid">
+      <div class="comp-card g">
+        <div class="comp-name">Analyse financière</div>
+        <div class="comp-val">FR · BFR · TN</div>
+        <div class="comp-sub">Missions 01 — 02</div>
+      </div>
+      <div class="comp-card o">
+        <div class="comp-name">Budgets prévisionnels</div>
+        <div class="comp-val">Ventes · Appro · Tréso</div>
+        <div class="comp-sub">Missions 03 — 07</div>
+      </div>
+      <div class="comp-card b">
+        <div class="comp-name">Contrôle budgétaire</div>
+        <div class="comp-val">Écarts · Forecast</div>
+        <div class="comp-sub">Missions 08 — 09</div>
+      </div>
+      <div class="comp-card g">
+        <div class="comp-name">Pilotage stratégique</div>
+        <div class="comp-val">Business Review</div>
+        <div class="comp-sub">Mission 10</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const KEY='techfab_v2';
+const MISSIONS=[
+  {num:'01',title:'Diagnostic financier',desc:'FR · BFR · TN · Paradoxe trésorerie',file:'01-presentation.html'},
+  {num:'02',title:'SWOT & PESTEL',desc:'Environnement, forces, menaces',file:'02-swot.html'},
+  {num:'03',title:'Hypothèses budgétaires',desc:'3 scénarios · Inflation · Seuil de rentabilité',file:'03-hypotheses.html'},
+  {num:'04',title:'Budget des ventes',desc:'Produits A/B/C · Saisonnalité · Répartition',file:'04-ventes.html'},
+  {num:'05',title:'Budget de production',desc:'Charges fixes/variables · Saturation machine',file:'05-production.html'},
+  {num:'06',title:'Budget approvisionnement',desc:'Matières · Stocks · BFR fournisseurs',file:'06-appro.html'},
+  {num:'07',title:'Budget de trésorerie',desc:'Flux · Décalages · Mois critiques',file:'07-tresorerie.html'},
+  {num:'08',title:'Réel vs Prévisionnel',desc:'Analyse des écarts · S1 réel',file:'08-ecarts.html'},
+  {num:'09',title:'Forecast & Atterrissage',desc:'Révision · Plan d\'action · Risques',file:'09-forecast.html'},
+  {num:'10',title:'Business Review finale',desc:'Synthèse · Décisions stratégiques',file:'10-synthese.html'},
+];
+
+const SECTION_KEYS=['s0','s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+
+function loadState(){
+  try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):{sections:{},totalScore:0,completedTabs:[]};}
+  catch(e){return {sections:{},totalScore:0,completedTabs:[]};}
+}
+
+function renderMissions(S){
+  const grid=document.getElementById('missions-grid');
+  const done=S.completedTabs||[];
+  let firstIncomplete=-1;
+  grid.innerHTML=MISSIONS.map((m,i)=>{
+    const isDone=done.includes(i);
+    const isCurr=!isDone&&(i===0||done.includes(i-1));
+    if(isCurr&&firstIncomplete<0)firstIncomplete=i;
+    const isLocked=!isDone&&!isCurr;
+    const cls='mission-card'+(isDone?' done':isCurr?' current':isLocked?' locked':'');
+    const secData=S.sections?.[SECTION_KEYS[i]];
+    const scoreStr=secData?`<span class="mc-score">${secData.score}/${secData.max}</span>`:'';
+    const badgeStr=isDone?'<span class="mc-badge done">✓ Validée</span>':isCurr?'<span class="mc-badge current">En cours</span>':'<span class="mc-badge todo">À venir</span>';
+    return `<a class="${cls}" href="${m.file}">
+      <div class="mc-inner">
+        <div class="mc-num">${m.num}</div>
+        <div class="mc-body">
+          <div class="mc-label">Mission ${m.num}</div>
+          <div class="mc-title">${m.title}</div>
+          <div class="mc-desc">${m.desc}</div>
+        </div>
+        <div class="mc-right">${scoreStr}${badgeStr}<span class="mc-arrow">›</span></div>
+      </div>
+    </a>`;
+  }).join('');
+
+  // CTA dynamique
+  const cta=document.getElementById('btn-start');
+  if(done.length===10){
+    cta.textContent='📊 Voir mes résultats';
+    cta.href='11-resultats.html';
+  } else if(firstIncomplete>0){
+    const m=MISSIONS[firstIncomplete];
+    cta.textContent='▶ Reprendre — Mission '+m.num;
+    cta.href=m.file;
+  }
+}
+
+function updateGlobProgress(S){
+  const done=(S.completedTabs||[]).length;
+  const total=Object.values(S.sections||{}).reduce((a,s)=>a+(s.score||0),0);
+  const pct=Math.round(done/10*100);
+  const note=Math.round(total/38*20*10)/10;
+  document.getElementById('glob-fill').style.width=pct+'%';
+  document.getElementById('glob-val').textContent=done+' / 10 missions';
+  document.getElementById('glob-pts').textContent=total;
+  document.getElementById('glob-pct').textContent=pct+' %';
+  document.getElementById('glob-note').textContent=done>0?note+'/20':'—';
+}
+
+function resetAll(){
+  if(!confirm('Réinitialiser toute la progression ? Cette action est irréversible.'))return;
+  localStorage.removeItem(KEY);
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const S=loadState();
+  renderMissions(S);
+  updateGlobProgress(S);
+});
+</script>
+</body>
+</html>

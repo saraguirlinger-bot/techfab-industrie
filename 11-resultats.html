@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TECHFAB — Résultats de mission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#1a1a1a;--black2:#222;
+  --green:#7aab80;--gdk:#4d7a52;--glt:#e8f2e9;
+  --gbg:#ededea;--gcd:#e4e4e0;--gln:#d4d4d0;
+  --gmid:#9a9a94;--gtxt:#56564f;--white:#fff;
+  --red:#c0392b;--orange:#e07a2e;--blue:#4a78c4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Barlow','Segoe UI',sans-serif;background:var(--gbg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:3px solid var(--green);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inst-left{display:flex;align-items:center;gap:10px}
+.inst-avatar{width:40px;height:40px;background:var(--gcd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.inst-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;color:var(--black);line-height:1.1}
+.inst-sub{font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gmid)}
+.home-btn{display:inline-flex;align-items:center;gap:5px;background:var(--black);color:var(--white);border:none;border-radius:3px;padding:6px 11px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s}
+.home-btn:hover{background:#333}
+
+/* ══ HERO RÉSULTAT ══ */
+.result-hero{background:var(--black);padding:28px 18px 24px;text-align:center}
+.result-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.result-score-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,.05);border:2px solid var(--green);border-radius:6px;padding:20px 32px;margin-bottom:16px}
+.result-score{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:3.5rem;color:var(--green);line-height:1}
+.result-max{font-size:.7rem;color:rgba(255,255,255,.35);font-weight:600;letter-spacing:.06em}
+.result-note{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:rgba(255,255,255,.55);margin-top:4px}
+.result-profile{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.2rem;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:4px}
+.result-profile-sub{font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.5;max-width:420px;margin:0 auto}
+
+/* ══ MAIN ══ */
+.main-wrap{max-width:700px;margin:0 auto;padding:18px 14px 80px}
+
+/* ══ BLOCK ══ */
+.block{background:var(--white);margin:0 0 12px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.block-hdr{background:var(--black);padding:9px 14px;display:flex;align-items:center;gap:9px}
+.block-badge{background:var(--green);color:var(--white);font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap}
+.block-title{font-family:'Barlow',sans-serif;font-weight:700;font-size:.86rem;color:var(--white)}
+.block-body{padding:14px 15px 17px}
+
+/* ══ BREAKDOWN ══ */
+.breakdown{display:flex;flex-direction:column;gap:8px}
+.bdown-item{display:flex;align-items:center;gap:10px}
+.bdown-num{font-size:.6rem;font-weight:700;color:var(--gmid);width:16px;flex-shrink:0;text-align:center}
+.bdown-name{font-size:.8rem;color:var(--gtxt);width:160px;flex-shrink:0;line-height:1.3}
+.bdown-bar-wrap{flex:1;height:5px;background:var(--gln);border-radius:100px;overflow:hidden}
+.bdown-bar{height:100%;border-radius:100px;transition:width .6s ease}
+.bdown-bar.full{background:var(--green)}
+.bdown-bar.high{background:var(--orange)}
+.bdown-bar.low{background:var(--red)}
+.bdown-score{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;color:var(--black);min-width:44px;text-align:right}
+
+/* ══ DETAIL TABLE ══ */
+.dtable{width:100%;border-collapse:collapse;font-size:.82rem}
+.dtable thead th{background:var(--black);color:var(--white);padding:8px 11px;text-align:left;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.dtable td{padding:9px 11px;border-bottom:1px solid var(--gln);color:var(--gtxt);vertical-align:top}
+.dtable td:first-child{font-weight:600;color:var(--black);white-space:nowrap}
+.dtable tr:last-child td{border-bottom:none}
+.dtable tr:nth-child(even) td{background:var(--gbg)}
+.dtable .ok{color:var(--gdk);font-weight:700}
+.dtable .warn{color:var(--orange);font-weight:700}
+.dtable .ko{color:var(--red);font-weight:700}
+
+/* ══ SEND FORM ══ */
+.send-block{background:var(--glt);border-left:3px solid var(--green);border-radius:3px;padding:14px 15px}
+.send-title{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gdk);margin-bottom:10px}
+.send-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}
+.send-field{flex:1;min-width:180px}
+.send-field label{display:block;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gtxt);margin-bottom:4px}
+.send-field input{width:100%;padding:9px 11px;border:1.5px solid var(--gln);border-radius:3px;font-family:'Barlow',sans-serif;font-size:.84rem;outline:none;background:var(--white)}
+.send-field input:focus{border-color:var(--green)}
+.btn-send{display:inline-flex;align-items:center;gap:6px;background:var(--black);color:var(--white);border:none;border-radius:3px;padding:10px 18px;font-family:'Barlow',sans-serif;font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.btn-send:hover{background:#333}
+.send-status{font-size:.72rem;color:var(--gmid);margin-top:7px;min-height:14px}
+
+/* ══ ACTIONS ══ */
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn-home{display:inline-flex;align-items:center;gap:6px;background:var(--black);color:var(--white);border:none;border-radius:3px;padding:11px 20px;font-family:'Barlow',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s}
+.btn-home:hover{background:#333}
+.btn-redo{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--gtxt);border:1.5px solid var(--gln);border-radius:3px;padding:10px 16px;font-family:'Barlow',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.btn-redo:hover{border-color:var(--green);color:var(--black)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:520px){
+  .result-score{font-size:2.5rem}
+  .bdown-name{width:120px}
+  .send-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="inst-left">
+    <div class="inst-avatar">⚙️</div>
+    <div>
+      <div class="inst-name">TECHFAB Industrie</div>
+      <div class="inst-sub">Horizon PME · Résultats de parcours</div>
+    </div>
+  </div>
+  <a class="home-btn" href="index.html">⌂ Accueil</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="result-hero">
+  <div class="result-eyebrow">Mission accomplie — Parcours TECHFAB Industrie</div>
+  <div class="result-score-wrap">
+    <div class="result-score" id="r-score">0</div>
+    <div class="result-max">points sur 38</div>
+    <div class="result-note" id="r-note">0 / 20</div>
+  </div>
+  <div class="result-profile" id="r-profile">—</div>
+  <div class="result-profile-sub" id="r-profile-sub">Chargement de votre profil...</div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap">
+
+  <!-- Détail par mission -->
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge">Résultats</div>
+      <div class="block-title">Détail par mission</div>
+    </div>
+    <div class="block-body">
+      <div class="breakdown" id="breakdown">
+        <!-- généré par JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau compétences -->
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge">Compétences</div>
+      <div class="block-title">Analyse par compétence</div>
+    </div>
+    <div class="block-body" style="padding:0;overflow:hidden">
+      <table class="dtable" id="comp-table">
+        <thead><tr><th>#</th><th>Mission</th><th>Score</th><th>Niveau</th></tr></thead>
+        <tbody id="comp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Envoyer les résultats -->
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge">📤 Export</div>
+      <div class="block-title">Envoyer à votre formateur</div>
+    </div>
+    <div class="block-body">
+      <div class="send-block">
+        <div class="send-title">📤 Transmission des résultats</div>
+        <div class="send-row">
+          <div class="send-field">
+            <label>Prénom et Nom</label>
+            <input type="text" id="apprenant-nom" placeholder="Ex : Marie Dupont">
+          </div>
+          <div class="send-field">
+            <label>Groupe / Formation</label>
+            <input type="text" id="apprenant-classe" placeholder="Ex : BTS CG — Groupe A">
+          </div>
+        </div>
+        <button class="btn-send" id="btn-send" onclick="sendResults()">
+          <span>📤</span><span>Envoyer les résultats</span>
+        </button>
+        <div class="send-status" id="send-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <a class="btn-home" href="index.html">⌂ Retour à l'accueil</a>
+    <button class="btn-redo" onclick="resetAll()">↺ Recommencer le parcours</button>
+  </div>
+
+</div>
+
+<script>
+const KEY='techfab_v2';
+const SECTION_META=[
+  {key:'s0',label:'Diagnostic financier',max:4},
+  {key:'s1',label:'SWOT & PESTEL',max:4},
+  {key:'s2',label:'Hypothèses budgétaires',max:4},
+  {key:'s3',label:'Budget des ventes',max:4},
+  {key:'s4',label:'Budget de production',max:4},
+  {key:'s5',label:'Budget appro.',max:4},
+  {key:'s6',label:'Budget de trésorerie',max:4},
+  {key:'s7',label:'Réel vs prévisionnel',max:4},
+  {key:'s8',label:'Forecast & atterrissage',max:4},
+  {key:'s9',label:'Business Review finale',max:5},
+];
+
+const PROFILES=[
+  {min:85,icon:'🏆',label:'Business Partner',sub:'Vous maîtrisez l\'ensemble du cycle de contrôle de gestion PME. Votre analyse est rigoureuse, vos recommandations sont stratégiquement fondées. Profil consultant senior.'},
+  {min:65,icon:'📈',label:'Contrôleur opérationnel',sub:'Vous maîtrisez les outils budgétaires et l\'analyse des écarts. Quelques ajustements restent à consolider sur la dimension stratégique.'},
+  {min:45,icon:'📊',label:'Analyste en construction',sub:'Les bases sont acquises. Consolidez votre maîtrise des calculs de trésorerie et de l\'interprétation des écarts pour progresser.'},
+  {min:0,icon:'📚',label:'Apprenti contrôleur',sub:'Continuez à travailler les fondamentaux du contrôle de gestion. Reprenez les missions avec le support du mémo Excel.'},
+];
+
+function loadState(){
+  try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):{sections:{},totalScore:0,completedTabs:[]};}
+  catch(e){return {sections:{},totalScore:0,completedTabs:[]};}
+}
+
+function render(){
+  const S=loadState();
+  const sects=S.sections||{};
+  const total=Object.values(sects).reduce((a,s)=>a+(s.score||0),0);
+  const maxTotal=38;
+  const pct=Math.round(total/maxTotal*100);
+  const note=Math.round(total/maxTotal*20*10)/10;
+
+  // Hero
+  document.getElementById('r-score').textContent=total;
+  document.getElementById('r-note').textContent=note+' / 20';
+
+  const profile=PROFILES.find(p=>pct>=p.min)||PROFILES[PROFILES.length-1];
+  document.getElementById('r-profile').textContent=profile.icon+' '+profile.label;
+  document.getElementById('r-profile-sub').textContent=profile.sub;
+
+  // Breakdown bars
+  const breakdown=document.getElementById('breakdown');
+  breakdown.innerHTML=SECTION_META.map((m,i)=>{
+    const s=sects[m.key];
+    const sc=s?s.score:0;
+    const ratio=sc/m.max;
+    const barClass=ratio===1?'full':ratio>=.5?'high':'low';
+    const pctBar=Math.round(ratio*100);
+    return `<div class="bdown-item">
+      <div class="bdown-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="bdown-name">${m.label}</div>
+      <div class="bdown-bar-wrap"><div class="bdown-bar ${barClass}" style="width:${pctBar}%"></div></div>
+      <div class="bdown-score">${sc} / ${m.max}</div>
+    </div>`;
+  }).join('');
+
+  // Detail table
+  const tbody=document.getElementById('comp-tbody');
+  const NIVEAUX={full:['ok','100 %','Maîtrisé'],high:['warn','≥ 50 %','En bonne voie'],low:['ko','< 50 %','À retravailler'],none:['ko','—','Non validé']};
+  tbody.innerHTML=SECTION_META.map((m,i)=>{
+    const s=sects[m.key];
+    const sc=s?s.score:0;
+    const ratio=s?sc/m.max:-1;
+    const nk=ratio<0?'none':ratio===1?'full':ratio>=.5?'high':'low';
+    const [cls,pctStr,label]=NIVEAUX[nk];
+    return `<tr>
+      <td style="color:var(--gmid);font-size:.72rem">${String(i+1).padStart(2,'0')}</td>
+      <td>${m.label}</td>
+      <td class="${cls}">${sc} / ${m.max}</td>
+      <td class="${cls}">${label}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function sendResults(){
+  const nom=document.getElementById('apprenant-nom').value.trim();
+  const classe=document.getElementById('apprenant-classe').value.trim();
+  if(!nom){alert('Merci de renseigner votre prénom et nom.');return;}
+  const btn=document.getElementById('btn-send');
+  const status=document.getElementById('send-status');
+  btn.disabled=true;btn.innerHTML='<span>⏳</span><span>Envoi en cours...</span>';
+
+  const S=loadState();
+  const total=Object.values(S.sections||{}).reduce((a,s)=>a+(s.score||0),0);
+  const note=Math.round(total/38*20*10)/10;
+  const pct=Math.round(total/38*100);
+  const profile=PROFILES.find(p=>pct>=p.min)||PROFILES[PROFILES.length-1];
+
+  try{
+    const res=await fetch('https://www.horizonpme.fr/save-techfab.php',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        nom,prenom:nom,classe,
+        total_score:total,note_sur_20:note,pourcentage:pct,
+        profil:profile.label,
+        sections:S.sections,
+        date:new Date().toISOString()
+      })
+    });
+    const data=await res.json();
+    if(data.success){
+      btn.innerHTML='<span>✓</span><span>Résultats envoyés !</span>';
+      btn.style.background='#4D7A52';
+      status.textContent='✓ '+nom+' — '+note+'/20 transmis au formateur';
+      status.style.color='#4D7A52';
+    }else throw new Error(data.error||'Erreur serveur');
+  }catch(e){
+    btn.disabled=false;
+    btn.innerHTML='<span>📤</span><span>Réessayer</span>';
+    status.textContent='❌ Envoi impossible : '+e.message;
+    status.style.color='var(--red)';
+  }
+}
+
+function resetAll(){
+  if(!confirm('Recommencer tout le parcours ? Toutes vos réponses seront effacées.'))return;
+  localStorage.removeItem(KEY);
+  window.location.href='index.html';
+}
+
+document.addEventListener('DOMContentLoaded',render);
+</script>
+</body>
+</html>
