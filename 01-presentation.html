@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TECHFAB — Mission 01 · Diagnostic financier</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#1a1a1a;--black2:#222;
+  --green:#7aab80;--gdk:#4d7a52;--glt:#e8f2e9;
+  --gbg:#ededea;--gcd:#e4e4e0;--gln:#d4d4d0;
+  --gmid:#9a9a94;--gtxt:#56564f;--white:#fff;
+  --red:#c0392b;--orange:#e07a2e;--blue:#4a78c4;
+  --cream:#fafaf7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Barlow','Segoe UI',sans-serif;background:var(--gbg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:3px solid var(--green);padding:10px 16px;position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inst-left{display:flex;align-items:center;gap:10px}
+.inst-avatar{width:40px;height:40px;background:var(--gcd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.inst-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;color:var(--black);line-height:1.1}
+.inst-sub{font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gmid)}
+.dl-btn{display:inline-flex;align-items:center;gap:5px;background:var(--green);color:var(--white);border:none;border-radius:3px;padding:6px 11px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s}
+.dl-btn:hover{background:var(--gdk)}
+.home-btn{display:inline-flex;align-items:center;gap:5px;background:var(--black);color:var(--white);border:none;border-radius:3px;padding:6px 11px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .15s}
+.home-btn:hover{background:#333}
+
+/* ══ SECTION TABS BAR ══ */
+.secbar-wrap{background:var(--black2);overflow-x:auto;scrollbar-width:none;position:sticky;top:62px;z-index:280}
+.secbar-wrap::-webkit-scrollbar{display:none}
+.secbar{display:flex;min-width:max-content}
+.sec-tab{display:flex;align-items:center;gap:5px;padding:0 14px;height:36px;border:none;background:transparent;cursor:pointer;font-family:'Barlow',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.sec-tab:hover{color:rgba(255,255,255,.65)}
+.sec-tab.active{color:var(--white);border-bottom-color:var(--green)}
+.sec-tab.done{color:rgba(255,255,255,.48)}
+.sec-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0;transition:background .15s}
+.sec-tab.active .sec-dot{background:var(--green)}
+.sec-tab.done .sec-dot{background:var(--gdk)}
+
+/* ══ PROGRESS ══ */
+.prog-strip{background:var(--black);padding:5px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:98px;z-index:270}
+.prog-bar{flex:1;height:2px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green);border-radius:100px;width:0%;transition:width .4s ease}
+.prog-txt{font-size:.62rem;color:rgba(255,255,255,.38);white-space:nowrap}
+.prog-score{font-size:.62rem;color:rgba(255,255,255,.38);white-space:nowrap}
+
+/* ══ MAIN WRAP ══ */
+.main-wrap{max-width:700px;margin:0 auto;padding:0 0 100px}
+
+/* ══ MISSION HERO ══ */
+.mission-hero{background:var(--black);padding:20px 18px 18px}
+.mission-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green);margin-bottom:5px}
+.mission-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.55rem;letter-spacing:.04em;text-transform:uppercase;color:var(--white);line-height:1.15;margin-bottom:6px}
+.mission-intro{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6;max-width:560px}
+.mission-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.mtag{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
+.mtag.g{background:rgba(122,171,128,.2);color:var(--green)}
+.mtag.o{background:rgba(224,122,46,.2);color:var(--orange)}
+.mtag.b{background:rgba(74,120,196,.2);color:#7aa4e8}
+
+/* ══ SECTION BLOCKS ══ */
+.block{background:var(--white);margin:12px 14px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.block-hdr{background:var(--black);padding:9px 14px;display:flex;align-items:center;gap:9px}
+.block-badge{background:var(--green);color:var(--white);font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap}
+.block-badge.o{background:var(--orange)}
+.block-badge.b{background:var(--blue)}
+.block-badge.r{background:var(--red)}
+.block-title{font-family:'Barlow',sans-serif;font-weight:700;font-size:.86rem;color:var(--white)}
+.block-body{padding:14px 15px 17px}
+
+/* ══ EXCEL TASK BLOCK ══ */
+.excel-block{background:#f0f7f1;border-left:3px solid var(--green);border-radius:3px;padding:13px 14px;margin-bottom:13px}
+.excel-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.excel-icon{font-size:1.1rem}
+.excel-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gdk)}
+.excel-steps{margin:0;padding-left:18px}
+.excel-steps li{font-size:.82rem;color:var(--gtxt);line-height:1.5;margin-bottom:4px}
+.excel-steps li strong{color:var(--black)}
+.excel-tab{display:inline-block;background:var(--gdk);color:var(--white);font-size:.64rem;font-weight:700;padding:2px 7px;border-radius:2px;margin-left:4px;letter-spacing:.05em}
+
+/* ══ INFO BOXES ══ */
+.info-box{display:flex;gap:10px;background:var(--glt);border-left:3px solid var(--green);border-radius:3px;padding:11px 13px;margin-bottom:12px;font-size:.82rem;color:var(--gtxt);line-height:1.6}
+.info-box.warn{background:#fff8f0;border-left-color:var(--orange)}
+.info-box.alert{background:#fef0f0;border-left-color:var(--red)}
+.info-box.blue{background:#eef3fc;border-left-color:var(--blue)}
+.info-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.info-box strong{color:var(--black)}
+
+/* ══ METRICS ══ */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.metric{background:var(--gbg);border-radius:3px;padding:11px;border-left:3px solid var(--gln)}
+.metric.g{border-left-color:var(--green)}
+.metric.r{border-left-color:var(--red)}
+.metric.o{border-left-color:var(--orange)}
+.metric.b{border-left-color:var(--blue)}
+.metric-lbl{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gmid);margin-bottom:3px}
+.metric-val{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.15rem;color:var(--black);line-height:1}
+.metric-sub{font-size:.7rem;color:var(--gtxt);margin-top:2px}
+
+/* ══ TABLES ══ */
+.dtable{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:12px}
+.dtable thead th{background:var(--black);color:var(--white);padding:8px 11px;text-align:left;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.dtable thead th.r{text-align:right}
+.dtable td{padding:8px 11px;border-bottom:1px solid var(--gln);color:var(--gtxt)}
+.dtable td:first-child{font-weight:600;color:var(--black)}
+.dtable tr:nth-child(even) td{background:var(--gbg)}
+.dtable tr:last-child td{border-bottom:none}
+.dtable .r{text-align:right;font-variant-numeric:tabular-nums}
+.dtable .tot td{font-weight:700;background:var(--glt)!important;color:var(--black)}
+.dtable .neg{color:var(--red)!important;font-weight:600}
+.dtable .pos{color:var(--gdk)!important;font-weight:600}
+.dtable .hl td{background:#fff8f0!important}
+
+/* ══ FORMULA BOX ══ */
+.formula{background:var(--black);border-radius:3px;padding:11px 14px;margin-bottom:12px}
+.formula-eq{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;color:var(--green);letter-spacing:.03em}
+.formula-note{font-size:.74rem;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.5}
+
+/* ══ OBJECTIVES LIST ══ */
+.obj-list{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.obj-item{display:flex;align-items:flex-start;gap:10px;background:var(--gbg);border-radius:3px;padding:10px 12px}
+.obj-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.obj-text{font-size:.82rem;color:var(--gtxt);line-height:1.5}
+.obj-text strong{color:var(--black)}
+
+/* ══ TRANSITION BLOCK ══ */
+.transition-block{background:linear-gradient(135deg,var(--black) 0%,#2a3a2a 100%);border-radius:3px;padding:14px 16px;margin-bottom:12px}
+.transition-eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:5px}
+.transition-text{font-size:.84rem;color:rgba(255,255,255,.75);line-height:1.6}
+.transition-arrow{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+
+/* ══ ANALYSIS PROMPT ══ */
+.analysis-block{background:#fafaf7;border:1px solid var(--gln);border-radius:3px;padding:13px 14px;margin-bottom:12px}
+.analysis-q{font-size:.82rem;font-weight:600;color:var(--black);margin-bottom:5px}
+.analysis-hint{font-size:.76rem;color:var(--gmid);font-style:italic}
+
+/* ══ Q&A QUESTIONS ══ */
+.qblock{margin-bottom:18px}
+.qblock:last-child{margin-bottom:0}
+.qlabel{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:5px}
+.qtext{font-size:.85rem;color:var(--black);font-weight:500;margin-bottom:10px;line-height:1.5}
+.ropts{display:flex;flex-direction:column;gap:6px}
+.ropt{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border:1.5px solid var(--gln);border-radius:3px;font-size:.82rem;color:var(--gtxt);cursor:pointer;transition:border-color .15s,background .15s;line-height:1.4}
+.ropt:hover{border-color:var(--green);background:var(--glt)}
+.ropt input{margin-top:2px;flex-shrink:0;accent-color:var(--green)}
+.fb{display:none;margin-top:7px;padding:8px 11px;border-radius:3px;font-size:.8rem;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:var(--glt);color:var(--gdk);border-left:3px solid var(--green)}
+.fb.pt{background:#fff9e0;color:#7a5c10;border-left:3px solid var(--orange)}
+.fb.ko{background:#fef0f0;color:#8b2a2a;border-left:3px solid var(--red)}
+
+/* ══ RANK / DRAG ══ */
+.rank-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.rank-item{display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--gbg);border:1.5px solid var(--gln);border-radius:3px;cursor:grab;font-size:.82rem;color:var(--gtxt);user-select:none;transition:border-color .15s,box-shadow .15s}
+.rank-item:active,.rank-item.dragging{cursor:grabbing;box-shadow:0 4px 12px rgba(0,0,0,.15);border-color:var(--green)}
+.rank-item.drag-over{border-color:var(--green);background:var(--glt)}
+.rank-handle{display:flex;flex-direction:column;gap:2px;padding:3px 4px;flex-shrink:0}
+.rank-handle span{display:block;width:14px;height:2px;background:var(--gln);border-radius:1px}
+.rank-item-text{flex:1}
+.rank-btns{display:flex;gap:3px}
+.rank-btn{background:var(--gcd);border:none;border-radius:2px;padding:3px 6px;font-size:.68rem;cursor:pointer;color:var(--gtxt)}
+.rank-btn:hover:not(:disabled){background:var(--green);color:#fff}
+.rank-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ══ MATCH SELECTS ══ */
+.match-table{width:100%;border-collapse:separate;border-spacing:0 5px;margin-bottom:10px}
+.match-table td{padding:3px 6px;font-size:.82rem;vertical-align:middle}
+.match-table select{width:100%;border:1.5px solid var(--gln);border-radius:3px;padding:7px 9px;font-family:'Barlow',sans-serif;font-size:.8rem;outline:none;background:var(--white);color:var(--black);cursor:pointer}
+.match-table select:focus{border-color:var(--green)}
+
+/* ══ ACTION BUTTONS ══ */
+.actions{display:flex;gap:8px;padding:0 14px;flex-wrap:wrap;margin-bottom:12px}
+.btn-val{background:var(--green);color:var(--white);border:none;border-radius:3px;padding:11px 20px;font-family:'Barlow',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.btn-val:hover{background:var(--gdk)}
+.btn-skip{background:transparent;color:var(--gmid);border:1.5px solid var(--gln);border-radius:3px;padding:10px 16px;font-family:'Barlow',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.btn-skip:hover{border-color:var(--green);color:var(--black)}
+.btn-next{background:var(--black);color:var(--white);border:none;border-radius:3px;padding:11px 20px;font-family:'Barlow',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.btn-next:hover{background:#333}
+.sscore{display:inline-block;background:var(--glt);color:var(--gdk);font-size:.74rem;font-weight:700;padding:4px 10px;border-radius:3px;border-left:3px solid var(--green)}
+
+/* ══ OVERLAY RESULTS ══ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;overflow-y:auto;padding:20px 12px}
+.rmodal{background:var(--white);border-radius:6px;max-width:480px;margin:0 auto;overflow:hidden}
+.rhdr{background:var(--black);padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+.rhdr-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.rhdr-title{font-size:.78rem;color:rgba(255,255,255,.5)}
+.rscore-wrap{padding:20px;text-align:center}
+.rscore-circle{width:90px;height:90px;border-radius:50%;border:3px solid var(--gln);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:12px;transition:border-color .3s}
+.rscore-circle.gd{border-color:var(--orange)}
+.rscore-circle.ex{border-color:var(--green)}
+.rscore-pct{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.6rem;color:var(--black);line-height:1}
+.rscore-lbl{font-size:.62rem;color:var(--gmid)}
+.rprofile{padding:0 18px 14px;text-align:center}
+.rprofile-icon{font-size:1.5rem;margin-bottom:5px}
+.rprofile-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;text-transform:uppercase;color:var(--black)}
+.rprofile-desc{font-size:.78rem;color:var(--gtxt);margin-top:3px}
+.rbreakdown{padding:0 18px 14px}
+.bdown-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--gln)}
+.bdown-item:last-child{border-bottom:none}
+.bdown-name{font-size:.72rem;color:var(--gtxt);width:120px;flex-shrink:0}
+.bdown-bar-wrap{flex:1;height:4px;background:var(--gln);border-radius:100px;overflow:hidden}
+.bdown-bar{height:100%;background:var(--green);border-radius:100px;transition:width .5s ease}
+.bdown-score{font-size:.72rem;font-weight:700;color:var(--black);min-width:36px;text-align:right}
+.rfeedback{padding:0 18px 14px}
+.rfb-key{font-size:.78rem;color:var(--gtxt);padding:4px 0;border-left:2px solid var(--green);padding-left:10px;margin-bottom:5px}
+.ract{display:flex;gap:8px;padding:0 18px 18px}
+.btn-rst{flex:1;background:var(--gbg);color:var(--gtxt);border:1px solid var(--gln);border-radius:3px;padding:9px;font-family:'Barlow',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.btn-cls{flex:1;background:var(--black);color:var(--white);border:none;border-radius:3px;padding:9px;font-family:'Barlow',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.rfield{padding:0 18px 8px}
+.rfield input{width:100%;padding:8px 10px;border:1.5px solid var(--gln);border-radius:3px;font-family:'Barlow',sans-serif;font-size:.84rem;outline:none;margin-bottom:6px}
+.rfield input:focus{border-color:var(--green)}
+.rfield button{width:100%;padding:10px;background:var(--black);color:var(--white);border:none;border-radius:3px;font-family:'Barlow',sans-serif;font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.rsend-status{font-size:.72rem;text-align:center;color:var(--gmid);min-height:14px;margin-top:4px;padding:0 18px 4px}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:520px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .block-body{padding:12px}
+  .main-wrap{padding:0 0 80px}
+  .actions{padding:0 10px}
+  .block{margin:10px 10px}
+  .mission-hero{padding:16px 14px}
+}
+
+/* === PATCH HORIZON PME 20260531_excelmaitre : navigation restaurée + corrections lisibles === */
+.secbar-wrap{display:block!important;min-height:38px;background:var(--black2)!important;z-index:1000!important;}
+.secbar{display:flex!important;min-width:max-content!important;}
+.secbar a.sec-tab{text-decoration:none!important;}
+.fb.show{display:block!important;opacity:1!important;visibility:visible!important;}
+#validation-banner{max-height:none!important;}
+@media (max-width:640px){
+  .sec-tab{height:42px;padding:0 12px;font-size:.62rem;}
+  .prog-strip{top:104px;}
+}
+
+</style>
+
+<script>
+// Force cache bust
+if(localStorage.getItem('techfab_cache_ver') !== 'v=20260531_excelmaitre') {
+  // Garder les scores mais invalider le cache navigateur
+  localStorage.setItem('techfab_cache_ver', 'v=20260531_excelmaitre');
+}
+</script>
+</head>
+<body data-idx="0">
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="inst-left">
+    <div class="inst-avatar">⚙️</div>
+    <div>
+      <div class="inst-name">TECHFAB Industrie</div>
+      <div class="inst-sub">Horizon PME · Contrôle de gestion</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:7px;align-items:center">
+    <a class="dl-btn" href="assets/TECHFAB_ELEVE_V5.xlsx?v=3.6&t=20260530" download>⬇ Fichier Excel</a>
+    <a class="home-btn" href="index.html?v=20260531_excelmaitre">⌂</a>
+  </div>
+</div>
+
+<!-- ══ SECTION NAV BAR ══ -->
+<div class="secbar-wrap">
+  <div class="secbar" id="sec-bar-inner"><a class="sec-tab active" href="01-presentation.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Présentation</a><a class="sec-tab" href="02-swot.html?v=20260531_excelmaitre"><span class="sec-dot"></span>SWOT</a><a class="sec-tab" href="03-hypotheses.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Hypothèses</a><a class="sec-tab" href="04-ventes.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Ventes</a><a class="sec-tab" href="05-production.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Production</a><a class="sec-tab" href="06-appro.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Appro.</a><a class="sec-tab" href="07-tresorerie.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Trésorerie</a><a class="sec-tab" href="08-ecarts.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Écarts</a><a class="sec-tab" href="09-forecast.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Forecast</a><a class="sec-tab" href="10-synthese.html?v=20260531_excelmaitre"><span class="sec-dot"></span>Synthèse</a></div>
+</div>
+
+<!-- ══ PROGRESS STRIP ══ -->
+<div class="prog-strip">
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+  <div class="prog-txt" id="prog-txt">0 / 10 validées</div>
+  <div class="prog-score" id="prog-score">0 pts</div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main-wrap">
+
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main-wrap">
+
+  <!-- ① HERO -->
+  <div class="mission-hero">
+    <div class="mission-eyebrow">Mission 01 · Diagnostic financier</div>
+    <div class="mission-title">Mission 01 · Diagnostic financier</div>
+    <div class="mission-intro">Vous venez d'être mandaté par le cabinet Horizon PME. Votre première tâche : comprendre pourquoi TECHFAB Industrie, entreprise rentable, affiche un découvert bancaire de 120 K€.</div>
+  </div>
+
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge">01 · Contexte</div>
+      <div class="block-title">Votre première mission chez TECHFAB Industrie</div>
+    </div>
+    <div class="block-body">
+      <div class="info-box"><span class="info-icon">📌</span><div><strong>Le cabinet Horizon PME</strong> vous mandate comme contrôleur de gestion junior. TECHFAB Industrie — PME industrielle de mobilier professionnel — présente une anomalie comptable préoccupante : <strong>l'entreprise est rentable, mais son dirigeant est à découvert</strong>. Votre rôle : comprendre ce paradoxe avant de construire les budgets.</div></div>
+      <div class="metrics">
+        <div class="metric g"><div class="metric-lbl">Créée en</div><div class="metric-val">2008</div><div class="metric-sub">Mobilier professionnel B2B</div></div>
+        <div class="metric "><div class="metric-lbl">CA annuel</div><div class="metric-val">1 250 K€</div><div class="metric-sub">PME, collectivités, coworking</div></div>
+        <div class="metric o"><div class="metric-lbl">Résultat net</div><div class="metric-val">85 K€</div><div class="metric-sub">Entreprise rentable ✓</div></div>
+        <div class="metric r"><div class="metric-lbl">Découvert bancaire</div><div class="metric-val">120 K€</div><div class="metric-sub">Tension critique ⚠️</div></div>
+      </div>
+      <p style="font-size:.82rem;color:var(--gtxt);line-height:1.6">TECHFAB vend à des collectivités et entreprises avec des délais de règlement à <strong>75 jours</strong>. Elle paie ses fournisseurs à <strong>30 jours</strong>. Cette asymétrie crée un besoin de financement structurel que la croissance aggrave chaque mois. C'est le <strong>paradoxe de la PME en croissance</strong> : plus elle vend, plus elle a besoin de cash.</p>
+
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge b">02 · Objectifs</div>
+      <div class="block-title">Ce que vous devez analyser</div>
+    </div>
+    <div class="block-body">
+      <div class="obj-list">
+        <div class="obj-item"><div class="obj-icon">📊</div><div class="obj-text"><strong>Calculer FR, BFR, TN</strong> — à partir du bilan N-1 dans votre fichier Excel. Ces trois indicateurs révèlent l'équilibre financier structurel de TECHFAB.</div></div>
+        <div class="obj-item"><div class="obj-icon">⚠️</div><div class="obj-text"><strong>Comprendre le paradoxe</strong> — rentabilité / trésorerie — une entreprise peut être bénéficiaire et manquer de liquidités à cause des décalages de paiement.</div></div>
+        <div class="obj-item"><div class="obj-icon">📈</div><div class="obj-text"><strong>Analyser le compte de résultat</strong> — VA → EBE → Résultat net → Trésorerie nette : comprendre la cascade de la valeur et pourquoi la TN est négative.</div></div>
+        <div class="obj-item"><div class="obj-icon">🎯</div><div class="obj-text"><strong>Formuler le diagnostic</strong> — en une phrase claire à présenter à la direction : quelle est la vraie nature du problème ?</div></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge o">03 · Excel</div>
+      <div class="block-title">Votre travail dans le fichier Excel</div>
+    </div>
+    <div class="block-body">
+      <div class="excel-block">
+        <div class="excel-header"><span class="excel-icon">📗</span><div class="excel-title">Ouvrez l'onglet <span class="excel-tab">01-Diagnostic</span></div></div>
+        <ol class="excel-steps">
+          <li>Ouvrez l'onglet <strong>Bilan N-1</strong> : calculez le <strong>Fonds de Roulement</strong> = Capitaux permanents − Actif immobilisé.</li>
+          <li>Calculez le <strong>Besoin en Fonds de Roulement</strong> = (Stocks + Créances clients) − Dettes fournisseurs.</li>
+          <li>Calculez la <strong>Trésorerie Nette</strong> = FR − BFR. </li>
+          <li>Dans l'onglet <strong>Compte de résultat</strong>, calculez la cascade : CA → Valeur ajoutée → EBE → Résultat net.</li>
+          <li>Notez les créances clients (110 K€) et vérifiez le délai de règlement implicite (75 j).</li>
+          <li>Rédigez votre <strong>diagnostic en 3 lignes</strong> dans la zone prévue.</li>
+        </ol>
+      </div>
+      <div class="info-box blue"><span class="info-icon">💡</span><div>Complétez <strong>toutes les cellules de votre onglet Excel</strong> avant de répondre aux questions. Les questions valident vos calculs.</div></div>
+
+    </div>
+  </div>
+          <div class="block">
+      <div class="block-hdr">
+        <div class="block-badge">04 · Données</div>
+        <div class="block-title">Bilan N-1 — Données brutes TECHFAB</div>
+      </div>
+      <div class="block-body">
+        <p style="font-size:.8rem;color:var(--gmid);margin-bottom:10px;font-style:italic">Ces données brutes sont dans votre fichier Excel onglet <strong>01-Diagnostic</strong>. Calculez FR, BFR et TN vous-même.</p>
+        <table class="dtable"><thead><tr><th>ACTIF</th><th class="r">Montant</th><th>PASSIF</th><th class="r">Montant</th></tr></thead><tbody>
+          <tr><td>Immobilisations nettes</td><td class="r">350 K€</td><td>Capitaux propres</td><td class="r">220 K€</td></tr>
+          <tr><td>Stocks</td><td class="r">90 K€</td><td>Dettes financières LT</td><td class="r">140 K€</td></tr>
+          <tr><td>Créances clients</td><td class="r">110 K€</td><td>Dettes fournisseurs</td><td class="r">85 K€</td></tr>
+          <tr><td>Disponibilités</td><td class="r">15 K€</td><td>Découvert bancaire</td><td class="r">120 K€</td></tr>
+          <tr class="tot"><td><strong>TOTAL ACTIF</strong></td><td class="r"><strong>565 K€</strong></td><td><strong>TOTAL PASSIF</strong></td><td class="r"><strong>565 K€</strong></td></tr>
+        </tbody></table>
+        <div class="formula"><div class="formula-eq">FR = Capitaux permanents − Actif immobilisé</div><div class="formula-note">Capitaux permanents = Capitaux propres + Dettes financières LT</div></div>
+        <div class="formula"><div class="formula-eq">BFR = (Stocks + Créances clients) − Dettes fournisseurs</div><div class="formula-note">Calculez dans Excel — comparez ensuite au FR</div></div>
+        <div class="formula"><div class="formula-eq">TN = FR − BFR</div><div class="formula-note">Si TN négatif → découvert structurel. Vérifiez avec le découvert bancaire du bilan (120 K€).</div></div>
+        <div class="info-box warn"><span class="info-icon">⚠️</span><div><strong>Calculez FR, BFR et TN dans votre Excel</strong> avant de répondre aux questions ci-dessous.</div></div>
+      </div>
+    </div>
+
+
+    <div class="block-body">
+      <p style="font-size:.8rem;color:var(--gmid);margin-bottom:10px;font-style:italic">Ces données figurent dans votre fichier Excel. Elles sont rappelées ici pour faciliter l'analyse.</p>
+      <table class="dtable"><thead><tr><th>Indicateur</th><th>Valeur</th><th>Signal</th></tr></thead><tbody>
+      <tr><td>Chiffre d'affaires</td><td>1 250 K€</td><td>Entreprise active</td></tr>
+<tr><td>Valeur ajoutée</td><td class="pos">490 K€</td><td>39,2 % du CA</td></tr>
+<tr><td>EBE</td><td class="pos">170 K€</td><td>13,6 % du CA</td></tr>
+<tr><td>Résultat net</td><td class="pos">85 K€</td><td>Entreprise rentable ✓</td></tr>
+<tr><td>Trésorerie nette</td><td class="neg">−105 K€</td><td>⚠️ Découvert structurel</td></tr>
+<tr><td>FR (Fonds de Roulement)</td><td>10 K€</td><td>Faible mais positif</td></tr>
+<tr><td>BFR</td><td>115 K€</td><td>Porté par les délais clients</td></tr>
+<tr><td>Créances clients</td><td>110 K€</td><td>75 jours de CA</td></tr>
+      </tbody></table>
+      <div class="formula"><div class="formula-eq">TN = FR − BFR</div><div class="formula-note"></div></div>
+      <div class="info-box warn"><span class="info-icon">⚠️</span><div>⚠️ <strong>Le paradoxe TECHFAB :</strong> l'entreprise est rentable mais affiche un découvert bancaire. La rentabilité ne garantit pas la liquidité — calculez TN dans Excel pour comprendre ce mécanisme.</div></div>
+
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge b">05 · Analyse</div>
+      <div class="block-title">Questions d'analyse — À compléter après Excel</div>
+    </div>
+    <div class="block-body">
+      <div class="qblock">
+        <div class="qlabel">Q1 · Problématique principale</div>
+        <div class="qtext">Quelle est la problématique principale de TECHFAB Industrie que vous avez identifiée dans votre diagnostic Excel ?</div>
+        <div class="ropts">
+          <label class="ropt"><input type="radio" name="q0_1" value="a"/> Chiffre d'affaires insuffisant — l'entreprise ne vend pas assez</label>
+          <label class="ropt"><input type="radio" name="q0_1" value="b"/> Tension de trésorerie malgré un résultat net positif — paradoxe rentabilité / liquidité</label>
+          <label class="ropt"><input type="radio" name="q0_1" value="c"/> Résultat net négatif — l'entreprise est déficitaire</label>
+          <label class="ropt"><input type="radio" name="q0_1" value="d"/> Charges salariales trop élevées par rapport au CA</label>
+        </div>
+        <div class="fb" id="fb_q0_1"></div>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Q2 · Signaux d'alerte — 2 réponses</div>
+        <div class="qtext">Quels sont les deux principaux signaux de tension financière que vous avez relevés dans votre diagnostic Excel ?</div>
+        <div class="ropts">
+          <label class="ropt"><input type="checkbox" name="q0_2" value="a"/> Découvert bancaire de 120 K€</label>
+          <label class="ropt"><input type="checkbox" name="q0_2" value="b"/> Résultat net insuffisant</label>
+          <label class="ropt"><input type="checkbox" name="q0_2" value="c"/> Créances clients élevées — 110 K€ correspondant à 75 jours de CA</label>
+          <label class="ropt"><input type="checkbox" name="q0_2" value="d"/> Stocks de matières trop importants</label>
+        </div>
+        <div class="fb" id="fb_q0_2"></div>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Q3 · Paradoxe financier</div>
+        <div class="qtext">Quelle affirmation résume correctement le paradoxe financier que vous avez calculé dans Excel ?</div>
+        <div class="ropts">
+          <label class="ropt"><input type="radio" name="q0_3" value="a"/> Une entreprise rentable est toujours liquide</label>
+          <label class="ropt"><input type="radio" name="q0_3" value="b"/> Les délais clients créent un besoin de financement qui peut dépasser la rentabilité et générer un découvert</label>
+          <label class="ropt"><input type="radio" name="q0_3" value="c"/> Le BFR est toujours inférieur au FR dans une PME industrielle</label>
+          <label class="ropt"><input type="radio" name="q0_3" value="d"/> La trésorerie nette est toujours positive si le résultat net est positif</label>
+        </div>
+        <div class="fb" id="fb_q0_3"></div>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Q4 · Cascade des indicateurs — Classez dans l'ordre</div>
+        <div class="qtext">Classez ces indicateurs de la valeur la plus élevée à la plus faible, de haut en bas :</div>
+        <div class="rank-list" id="rank_q0_4">
+          <div class="rank-item" data-val="va" draggable="true"><div class="rank-handle"><span></span><span></span><span></span></div><div class="rank-item-text">Valeur ajoutée (VA)</div><div class="rank-btns"><button class="rank-btn" data-dir="up">▲</button><button class="rank-btn" data-dir="down">▼</button></div></div>
+          <div class="rank-item" data-val="ebe" draggable="true"><div class="rank-handle"><span></span><span></span><span></span></div><div class="rank-item-text">EBE</div><div class="rank-btns"><button class="rank-btn" data-dir="up">▲</button><button class="rank-btn" data-dir="down">▼</button></div></div>
+          <div class="rank-item" data-val="resultat" draggable="true"><div class="rank-handle"><span></span><span></span><span></span></div><div class="rank-item-text">Résultat net</div><div class="rank-btns"><button class="rank-btn" data-dir="up">▲</button><button class="rank-btn" data-dir="down">▼</button></div></div>
+          <div class="rank-item" data-val="tresorerie" draggable="true"><div class="rank-handle"><span></span><span></span><span></span></div><div class="rank-item-text">Trésorerie nette</div><div class="rank-btns"><button class="rank-btn" data-dir="up">▲</button><button class="rank-btn" data-dir="down">▼</button></div></div>
+        </div>
+        <div class="fb" id="fb_q0_4"></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-hdr">
+      <div class="block-badge r">06 · Suite</div>
+      <div class="block-title">Transition vers la Mission 02 — Analyse stratégique</div>
+    </div>
+    <div class="block-body">
+      <div class="transition-block">
+        <div class="transition-eyebrow">Ce que vous venez d'établir</div>
+        <div class="transition-text">TECHFAB est rentable mais à bout de souffle sur le plan de la trésorerie. Vous comprenez maintenant le mécanisme FR/BFR/TN. Mais <strong>pourquoi TECHFAB est-elle en difficulté ?</strong> Quels sont les risques externes qui menacent son équilibre ? Avant de construire les budgets, il faut analyser l'environnement.<br><br><strong style="color:#7aab80">Mission suivante :</strong> SWOT et PESTEL — identifier les forces, faiblesses, opportunités et menaces qui encadreront vos hypothèses budgétaires.</div>
+        <div class="transition-arrow">Mission 02 — Analyse SWOT & PESTEL →</div>
+      </div>
+      <div class="analysis-block">
+        <div class="analysis-q">💬 À retenir de cette mission</div>
+        <div class="analysis-hint">FR, BFR et TN calculés dans Excel · Délais clients 75 j = vrai risque · RN ≠ trésorerie</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn-val" onclick="validateAndNext(0,'02-swot.html?v=20260531_excelmaitre')">✓ Valider la Mission 01</button>
+    <button class="btn-skip" onclick="window.location.href='02-swot.html'">Passer →</button>
+    <span id="sscore-0" style="margin-left:8px"></span>
+  </div>
+
+
+</div><!-- /main-wrap -->
+
+<script>
+'use strict';
+const KEY='techfab_v2';
+
+const CORRECT={
+  q0_1:'b', q0_2:['a','c'], q0_3:'b', q0_4:['va','ebe','resultat','tresorerie']
+};
+
+const FB={
+  q0_1:{ok:'✓ Tension de trésorerie (découvert 120 K€) malgré un RN positif (85 K€).',ko:'✗ La problématique principale est la tension de trésorerie malgré la rentabilité.'},
+  q0_2:{ok:'✓ Découvert bancaire (120 K€) et créances clients (110 K€) sont les deux signaux visibles.',pt:'△ Les deux signaux sont : découvert bancaire ET créances clients élevées.',ko:'✗ Les signaux clés sont le découvert bancaire de 120 K€ et les créances clients de 110 K€.'},
+  q0_3:{ok:'✓ Exact : les délais clients peuvent créer un manque de liquidités malgré un bénéfice.',ko:'✗ Une entreprise peut être rentable mais manquer de liquidités à cause des décalages de paiement.'},
+  q0_4:{ok:'✓ Ordre correct : VA (490 K€) > EBE (170 K€) > Résultat net (85 K€) > Trésorerie nette (−105 K€).',ko:'✗ Ordre attendu : Valeur ajoutée > EBE > Résultat net > Trésorerie nette (négative).'}
+};
+
+const SECTION_META=[
+  {key:'s0',label:'01 · Présentation',qs:['q0_1','q0_2','q0_3','q0_4']},
+  {key:'s1',label:'02 · SWOT/PESTEL',qs:['q1_1','q1_2','q1_3','q1_4']},
+  {key:'s2',label:'03 · Hypothèses',qs:['q2_1','q2_2','q2_3','q2_4']},
+  {key:'s3',label:'04 · Budget Ventes',qs:['q3_1','q3_2','q3_3','q3_4']},
+  {key:'s4',label:'05 · Production',qs:['q4_1','q4_2','q4_3','q4_4']},
+  {key:'s5',label:'06 · Appro.',qs:['q5_1','q5_2','q5_3','q5_4']},
+  {key:'s6',label:'07 · Trésorerie',qs:['q6_1','q6_2','q6_3','q6_4']},
+  {key:'s7',label:'08 · Réel/Écarts',qs:['q7_1','q7_2','q7_3','q7_4']},
+  {key:'s8',label:'09 · Forecast',qs:['q8_1','q8_2','q8_3','q8_4']},
+  {key:'s9',label:'10 · Synthèse',qs:['br_risk','br_cause','br_ecart','br_action','br_scenario']},
+];
+
+const PAGE_FILES=['01-presentation.html?v=20260531_excelmaitre','02-swot.html?v=20260531_excelmaitre','03-hypotheses.html?v=20260531_excelmaitre','04-ventes.html?v=20260531_excelmaitre','05-production.html?v=20260531_excelmaitre','06-appro.html?v=20260531_excelmaitre','07-tresorerie.html?v=20260531_excelmaitre','08-ecarts.html?v=20260531_excelmaitre','09-forecast.html?v=20260531_excelmaitre','10-synthese.html?v=20260531_excelmaitre'];
+const PAGE_TITLES=['Présentation','SWOT','Hypothèses','Ventes','Production','Appro.','Trésorerie','Écarts','Forecast','Synthèse'];
+
+let S=load();
+function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):fresh();}catch(e){return fresh();}}
+function fresh(){return {sections:{},totalScore:0,completedTabs:[],answers:{}};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S,null,2));}catch(e){}window._techfabAnswers=JSON.stringify(S,null,2);}
+
+function showFb(id,msg,type){
+  const el=document.getElementById('fb_'+id)||document.getElementById('fb-'+id);
+  if(!el)return;el.textContent=msg;el.className='fb show '+type;
+}
+
+function evalQ(qk){
+  const correct=CORRECT[qk];if(!correct)return 0;
+  if(qk==='q1_4'){
+    const keys=Object.keys(correct);let all=true,part=0;
+    keys.forEach(n=>{const el=document.querySelector(`select[name="${n}"]`);const v=el?el.value:'';if(v===correct[n])part++;else all=false;});
+    const filled=keys.every(n=>{const el=document.querySelector(`select[name="${n}"]`);return el&&el.value;});
+    if(!filled)return 0;
+    const t=all?'ok':part>0?'pt':'ko';
+    showFb(qk,FB[qk]?.[t]||'',t);return all?1:0;
+  }
+  if(qk==='q0_4'){
+    const items=document.querySelectorAll('#rank_q0_4 .rank-item');
+    const order=[...items].map(i=>i.dataset.val);
+    const ok=JSON.stringify(order)===JSON.stringify(correct);
+    showFb(qk,FB[qk]?.[ok?'ok':'ko']||'',ok?'ok':'ko');return ok?1:0;
+  }
+  if(Array.isArray(correct)){
+    const sel=[...document.querySelectorAll(`input[name="${qk}"]:checked`)].map(e=>e.value);
+    if(!sel.length)return 0;
+    const ok=sel.length===correct.length&&correct.every(v=>sel.includes(v));
+    const part=sel.some(v=>correct.includes(v));
+    const t=ok?'ok':part?'pt':'ko';
+    showFb(qk,FB[qk]?.[t]||FB[qk]?.ok||'',t);
+    S.answers[qk]=sel;return ok?1:0;
+  }
+  const el=document.querySelector(`input[name="${qk}"]:checked`);
+  const v=el?el.value:'';if(!v)return 0;
+  const ok=v===correct;
+  showFb(qk,FB[qk]?.[ok?'ok':'ko']||'',ok?'ok':'ko');
+  S.answers[qk]=v;return ok?1:0;
+}
+
+function validateAndNext(idx,nextPage){
+  const meta=SECTION_META[idx];
+  let score=0;meta.qs.forEach(qk=>{score+=evalQ(qk);});
+  S.sections[meta.key]={score,max:meta.qs.length,label:meta.label};
+  S.totalScore=Object.values(S.sections).reduce((a,s)=>a+(s.score||0),0);
+  if(!S.completedTabs.includes(idx))S.completedTabs.push(idx);
+  save();updateProgress();
+
+  // Afficher le score
+  const sw=document.getElementById('sscore-'+idx);
+  if(sw){sw.innerHTML='<span class="sscore">✓ Mission validée — '+score+' / '+meta.qs.length+' pts</span>';}
+
+  // Désactiver le bouton de validation
+  const btnVal=document.querySelector('.btn-val');
+  if(btnVal){btnVal.disabled=true;btnVal.style.opacity='0.5';}
+
+  // Afficher le bandeau de résultat + bouton Continuer
+  let banner=document.getElementById('validation-banner');
+  if(!banner){
+    banner=document.createElement('div');
+    banner.id='validation-banner';
+    banner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999;background:#1a1a1a;border-top:3px solid #7aab80;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,.3);';
+    document.body.appendChild(banner);
+  }
+  const pct=Math.round(score/meta.qs.length*100);
+  const color=pct===100?'#7aab80':pct>=50?'#e07a2e':'#c0392b';
+  const emoji=pct===100?'🎯':pct>=50?'👍':'📚';
+  banner.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="font-size:1.6rem">${emoji}</div>
+      <div>
+        <div style="font-family:Arial;font-weight:700;color:${color};font-size:1rem">${score} / ${meta.qs.length} points — ${pct} %</div>
+        <div style="font-family:Arial;font-size:.8rem;color:rgba(255,255,255,.55);margin-top:2px;">Les corrections restent affichées : relisez-les avant de continuer.</div>
+      </div>
+    </div>
+    <button onclick="window.location.href='${nextPage}'" style="background:${color};color:#fff;border:none;border-radius:4px;padding:12px 24px;font-family:Arial;font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;">
+      Mission suivante →
+    </button>
+  `;
+  // Les corrections restent affichées sur place : pas de scroll automatique.
+}
+
+function updateProgress(){
+  const done=S.completedTabs.length;
+  const total=Object.values(S.sections).reduce((a,s)=>a+(s.score||0),0);
+  const pf=document.getElementById('prog-fill');
+  const pt=document.getElementById('prog-txt');
+  const ps=document.getElementById('prog-score');
+  if(pf)pf.style.width=(done/10*100)+'%';
+  if(pt)pt.textContent=done+'/10 validées';
+  if(ps)ps.textContent=total+' pts';
+}
+
+function buildSecBar(currentIdx){
+  const bar=document.getElementById('sec-bar-inner');if(!bar)return;
+  bar.innerHTML=PAGE_TITLES.map((title,i)=>{
+    const done=!!S.sections['s'+i];
+    const cls='sec-tab'+(i===currentIdx?' active':'')+(done&&i!==currentIdx?' done':'');
+    return `<button class="${cls}" onclick="goToSection(${i})"><span class="sec-dot"></span>${title}</button>`;
+  }).join('');
+}
+function goToSection(idx){if(idx>=0&&idx<10)window.location.href=PAGE_FILES[idx];}
+
+function resetAll(){
+  if(!confirm('Recommencer ? Toutes les réponses seront effacées.'))return;
+  localStorage.removeItem(KEY);S=fresh();save();location.reload();
+}
+
+async function sendResults(){
+  const nom=document.getElementById('apprenant-nom')?.value?.trim();
+  if(!nom){alert('Merci de renseigner votre prénom et nom.');return;}
+  const btn=document.getElementById('btn-send');
+  const status=document.getElementById('send-status');
+  if(btn){btn.disabled=true;btn.innerHTML='<span>⏳</span><span>Envoi...</span>';}
+  const S2=load();
+  const total=Object.values(S2.sections).reduce((a,s)=>a+(s.score||0),0);
+  const note=Math.round(total/43*20*10)/10;
+  const pct=Math.round(total/43*100);
+  const profile=pct>=75?'Business Partner':pct>=50?'Contrôleur opérationnel':'Analyste en construction';
+  try{
+    const res=await fetch('https://www.horizonpme.fr/save-techfab.php',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nom,prenom:nom,classe:'',total_score:total,note_sur_20:note,pourcentage:pct,profil:profile,sections:S2.sections,date:new Date().toISOString()})
+    });
+    const data=await res.json();
+    if(data.success){
+      if(btn){btn.innerHTML='<span>✓</span><span>Envoyé !</span>';btn.style.background='#4D7A52';}
+      if(status){status.textContent=nom+' — '+note+'/20 envoyé';status.style.color='#4D7A52';}
+    }else throw new Error(data.error||'Erreur');
+  }catch(e){
+    if(btn){btn.disabled=false;btn.innerHTML='<span>📤</span><span>Réessayer</span>';}
+    if(status){status.textContent='❌ '+e.message;status.style.color='#c0392b';}
+  }
+}
+
+// ── RANKING DRAG & DROP + TOUCH ──
+function initRanking(){
+  document.querySelectorAll('.rank-list').forEach(function(list){
+    list.addEventListener('click',function(e){
+      var btn=e.target.closest('.rank-btn');if(!btn)return;
+      var item=btn.closest('.rank-item'),dir=btn.dataset.dir;
+      if(dir==='up'&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling);
+      else if(dir==='down'&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item);
+      refreshRankBtns(list);
+    });
+    var dragged=null;
+    list.querySelectorAll('.rank-item').forEach(function(item){
+      item.setAttribute('draggable','true');
+      item.addEventListener('dragstart',function(){dragged=item;item.classList.add('dragging');});
+      item.addEventListener('dragend',function(){item.classList.remove('dragging');dragged=null;refreshRankBtns(list);});
+      item.addEventListener('dragover',function(e){e.preventDefault();if(!dragged||dragged===item)return;var r=item.getBoundingClientRect();if(e.clientY<r.top+r.height/2)list.insertBefore(dragged,item);else list.insertBefore(dragged,item.nextSibling);});
+      item.addEventListener('drop',function(e){e.preventDefault();});
+    });
+    var tI=null,tC=null,tOX=0,tOY=0;
+    list.querySelectorAll('.rank-handle').forEach(function(hdl){
+      hdl.addEventListener('touchstart',function(e){
+        e.preventDefault();tI=hdl.closest('.rank-item');
+        var t=e.touches[0],r=tI.getBoundingClientRect();tOX=t.clientX-r.left;tOY=t.clientY-r.top;
+        tC=tI.cloneNode(true);
+        tC.style.cssText='position:fixed;opacity:.85;pointer-events:none;z-index:9999;width:'+r.width+'px;background:#fff;border:2px solid #7aab80;border-radius:4px;padding:9px 10px;box-shadow:0 4px 16px rgba(0,0,0,.2);left:'+(t.clientX-tOX)+'px;top:'+(t.clientY-tOY)+'px;font-size:.82rem';
+        document.body.appendChild(tC);tI.style.opacity='.3';
+      },{passive:false});
+      hdl.addEventListener('touchmove',function(e){
+        e.preventDefault();var t=e.touches[0];
+        if(tC){tC.style.left=(t.clientX-tOX)+'px';tC.style.top=(t.clientY-tOY)+'px';}
+        list.querySelectorAll('.rank-item').forEach(function(i){
+          if(i===tI)return;var r=i.getBoundingClientRect();
+          if(t.clientY>r.top&&t.clientY<r.bottom){if(t.clientY<r.top+r.height/2)list.insertBefore(tI,i);else list.insertBefore(tI,i.nextSibling);}
+        });
+      },{passive:false});
+      hdl.addEventListener('touchend',function(){
+        if(tC){document.body.removeChild(tC);tC=null;}
+        if(tI){tI.style.opacity='';tI=null;}
+        refreshRankBtns(list);
+      });
+    });
+    refreshRankBtns(list);
+  });
+}
+function refreshRankBtns(list){
+  var items=list.querySelectorAll('.rank-item');
+  items.forEach(function(item,i){
+    var u=item.querySelector('.rank-btn[data-dir="up"]');
+    var d=item.querySelector('.rank-btn[data-dir="down"]');
+    if(u)u.disabled=(i===0);if(d)d.disabled=(i===items.length-1);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const idx=parseInt(document.body.dataset.idx||'0');
+  buildSecBar(idx);updateProgress();initRanking();
+  const meta=SECTION_META[idx];
+  if(meta&&S.sections[meta.key]){
+    const r=S.sections[meta.key];
+    const sw=document.getElementById('sscore-'+idx);
+    if(sw){sw.innerHTML='<span class="sscore">✓ Validée — '+r.score+'/'+r.max+' pts</span>';}
+  }
+});
+</script>
+
+</body>
+</html>
